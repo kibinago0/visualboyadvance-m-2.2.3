@@ -30,7 +30,7 @@ jobs:
 
       - name: Configure
         run: >-
-          cmake -B build -G ${{ matrix.cmake_generator }} -DVCPKG_TARGET_TRIPLET=${{ matrix.cmake_vcpkg_triplet }} ${{ matrix.cmake_build }}
+          cmake -B build -G ${{ matrix.cmake_generator }} -DVCPKG_TARGET_TRIPLET=${{ matrix.cmake_vcpkg_triplet }} -DENABLE_XAUDIO2=OFF ${{ matrix.cmake_build }}
 
       - name: Build
         run: cmake --build build --parallel
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visualboyadvance-m-windows-x64
-          path: build/visualboyadvance-m.exe
+          path: build/src/wx/visualboyadvance-m.exe
           if-no-files-found: error
 
       # Run tests
