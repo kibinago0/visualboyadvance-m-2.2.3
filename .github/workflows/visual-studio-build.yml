@@ -35,11 +35,20 @@ jobs:
       - name: Build
         run: cmake --build build --parallel
 
+      - name: Locate executable
+        shell: pwsh
+        run: |
+          $executable = Get-ChildItem -Path build -Filter visualboyadvance-m.exe -Recurse -File | Select-Object -First 1
+          if (-not $executable) {
+            throw 'visualboyadvance-m.exe was not produced'
+          }
+          Write-Host "Found executable at $($executable.FullName)"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: visualboyadvance-m-windows-x64
-          path: build/src/wx/visualboyadvance-m.exe
+          path: build/**/visualboyadvance-m.exe
           if-no-files-found: error
 
       # Run tests
