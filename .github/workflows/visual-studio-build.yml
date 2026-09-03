@@ -1,9 +1,16 @@
 name: Visual Studio
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         msvc_arch: ['x64', 'amd64_x86', 'amd64_arm64']
         # TODO: Re-add "Visual Studio 17 2022" once it's working.
@@ -52,7 +59,7 @@ jobs:
           cmake -B build -G ${{ matrix.cmake_generator }} -DVCPKG_TARGET_TRIPLET=${{ matrix.cmake_vcpkg_triplet }} ${{ matrix.cmake_build }} ${{ matrix.cmake_options }}
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --parallel
 
       # Run tests
       - if: matrix.build_options == 'default' && matrix.msvc_arch != 'amd64_arm64'
